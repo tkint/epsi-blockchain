@@ -10,7 +10,7 @@ import router from './router';
 
 Vue.config.productionTip = false;
 
-Axios.defaults.baseURL = 'http://82.224.149.137/BookKeeperWebServices/';
+Axios.defaults.baseURL = 'http://ip/api/';
 // Axios.defaults.headers.Authorization = 'Basic dGtpbnQ6MzYyNjZacnBwYy4';
 
 Vue.use(Vuetify);
