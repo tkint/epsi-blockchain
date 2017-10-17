@@ -10,9 +10,6 @@ import router from './router';
 
 Vue.config.productionTip = false;
 
-Axios.defaults.baseURL = 'http://home.thomaskint.com/ChainMoocWebServices/';
-Axios.defaults.headers.Authorization = 'Basic dGtpbnQ6MzYyNjZacnBwYy4';
-
 Vue.use(Vuetify);
 Vue.use(VueAxios, Axios);
 
