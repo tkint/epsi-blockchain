@@ -5,6 +5,7 @@ import Dashboard from '@/components/Dashboard';
 import Cours from '@/components/Cours';
 import Diplome from '@/components/Diplome';
 import Settings from '@/components/Settings';
+import addCourses from '@/components/form/addCourses';
 
 Vue.use(Router);
 
@@ -24,6 +25,14 @@ export default new Router({
       path: '/Cours',
       name: 'Cours',
       component: Cours,
+      // Children is just another route definition of sub-routes.
+      children: [
+        {
+          // Note: No leading slash. This can trip people up sometimes.
+          path: 'add',
+          component: addCourses,
+        },
+      ],
     },
     {
       path: '/Diplome',
