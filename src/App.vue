@@ -12,14 +12,15 @@
 
     <v-toolbar app fixed clipped-left dark>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title> <router-link to="/" style="text-decoration: none;">ChainMOOC</router-link></v-toolbar-title>
+      <v-toolbar-title><router-link to="/" style="text-decoration: none;">ChainMOOC</router-link></v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn v-if="!login" color="grey" @click.stop="dialogSignIn = true">SIGN IN</v-btn>
-      <v-btn v-if="!login" color="grey" @click.stop="dialogSignUp = true">SIGN UP</v-btn>
-      <v-btn v-if="login"><i class="material-icons" color="#369b74">account_circle</i></v-btn>
+      <v-btn v-if="!this.isLog" color="blue" @click.stop="dialogSignIn = true">SIGN IN</v-btn>
+      <v-btn v-if="!this.isLog" color="blue" @click.stop="dialogSignUp = true">SIGN UP</v-btn>
+      <v-btn v-if="this.isLog" color="blue"><i class="material-icons" color="#369b74">account_circle</i></v-btn>
 
     </v-toolbar>
-      <v-dialog v-model="dialogSignIn" persistent max-width="500px">
+    <v-layout row justify-center style="display:none">
+      <v-dialog v-model="dialogSignIn" max-width="500px">
         <v-card>
           <v-card-title>
             <span class="headline">Sign in</span>
@@ -28,10 +29,10 @@
             <v-container grid-list-md>
               <v-layout wrap>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field label="Login" required></v-text-field>
+                  <v-text-field label="Login" required v-model="bdd_user.login"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field label="Password" required></v-text-field>
+                  <v-text-field label="Password" required v-model="bdd_user.password"></v-text-field>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -40,12 +41,13 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" flat @click.native="dialogSignIn = false">Close</v-btn>
-            <v-btn color="blue darken-1" flat @click.native="dialogSignIn = false">Log in</v-btn>
+            <v-btn color="blue darken-1" flat @click.native="dialogSignIn = false; login();">Log in</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-
-      <v-dialog v-model="dialogSignUp" persistent max-width="500px" >
+    </v-layout>
+    <v-layout row justify-center style="display:none">
+      <v-dialog v-model="dialogSignUp" max-width="500px" >
         <v-card>
           <v-card-title>
             <span class="headline">Sign up </span>
@@ -54,16 +56,16 @@
             <v-container grid-list-md>
               <v-layout wrap>
                 <v-flex xs12 sm6 md12>
-                  <v-text-field label="First name" required></v-text-field>
+                  <v-text-field label="First name" required v-model="bdd_user.firstname"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md12>
-                  <v-text-field label="Last name" required ></v-text-field>
+                  <v-text-field label="Last name" required v-model="bdd_user.lastname"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md12>
-                  <v-text-field label="Login" required></v-text-field>
+                  <v-text-field label="Login" required v-model="bdd_user.login"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md12>
-                  <v-text-field label="Password" required></v-text-field>
+                  <v-text-field label="Password" required v-model="bdd_user.password"></v-text-field>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -71,11 +73,13 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat v-on:click="dialogSignUp = false">Close</v-btn>
-            <v-btn color="blue darken-1" flat v-on:click="dialogSignUp = false">Sign up</v-btn>
+            <v-btn color="blue darken-1" flat @click.native="dialogSignUp = false">Close</v-btn>
+            <v-btn color="blue darken-1" flat @click.native="dialogSignUp = false; registerStudent">Sign up as Student</v-btn>
+            <v-btn color="blue darken-1" flat @click.native="dialogSignUp = false; registerTeacher">Sign up as Teacher</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
+    </v-layout>
     <main>
       <v-content>
         <v-container fluid>
@@ -106,6 +110,7 @@
         drawer: true,
         dialogSignIn: false,
         dialogSignUp: false,
+        isLog: false,
         bdd_api: 'http://home.thomaskint.com/public/ChainMoocWebServices',
         bdd_api_config: {
           headers: {
@@ -165,6 +170,7 @@
         this.axios.post(`${this.bdd_api}/user/login`, this.bdd_user, this.bdd_api_config).then((response) => {
           this.bdd_user = response.data;
         });
+        this.isLog = true;
       },
       registerStudent() {
         this.register(0);
