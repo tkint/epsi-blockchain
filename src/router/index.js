@@ -15,11 +15,13 @@ export default new Router({
       path: '/',
       name: 'Accueil',
       component: Accueil,
+      props: true,
     },
     {
       path: '/Dashboard',
       name: 'Dashboard',
       component: Dashboard,
+      props: true,
     },
     {
       path: '/Cours',
@@ -33,16 +35,19 @@ export default new Router({
           component: addCourses,
         },
       ],
+      props: true,
     },
     {
       path: '/Diplome',
       name: 'Diplome',
       component: Diplome,
+      props: true,
     },
     {
       path: '/Settings',
       name: 'Settings',
       component: Settings,
+      props: true,
     },
   ],
 });

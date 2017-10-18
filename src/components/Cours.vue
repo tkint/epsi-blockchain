@@ -13,6 +13,7 @@
 
   export default {
     name: 'Cours',
+    props: ['parent'],
     data() {
       return {
         msg: 'Bienvenue sur la page des cours',
