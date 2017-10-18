@@ -7,20 +7,20 @@
       v-model="drawer"
       enable-resize-watcher
       app
-      v-if="this.isLog"
+      v-if="isLog"
     >
       <menu-vertical></menu-vertical>
     </v-navigation-drawer>
     <!-- CODE FOR HEADER TOOLBAR -->
     <v-toolbar app fixed clipped-left dark>
-      <v-toolbar-side-icon v-if="this.isLog" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-toolbar-side-icon v-if="isLog" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title><router-link to="/" style="text-decoration: none; color:#fff;">ChainMOOC</router-link></v-toolbar-title>
       <v-spacer></v-spacer>
       <!-- CODE FOR POPUP SIGN IN/SIGN UP -->
-      <v-btn v-if="!this.isLog" color="blue" @click.stop="dialogSignIn = true">SIGN IN</v-btn>
-      <v-btn v-if="!this.isLog" color="green" @click.stop="dialogSignUp = true">SIGN UP</v-btn>
+      <v-btn v-if="!isLog" color="blue" @click.stop="dialogSignIn = true">SIGN IN</v-btn>
+      <v-btn v-if="!isLog" color="green" @click.stop="dialogSignUp = true">SIGN UP</v-btn>
       <!-- CODE FOR USER MENU -->
-      <v-menu v-if="this.isLog" bottom left>
+      <v-menu v-if="isLog" bottom left>
         <v-btn icon slot="activator" dark>
           <v-icon>account_circle</v-icon>
         </v-btn>
@@ -101,7 +101,7 @@
       <v-content>
         <v-container fluid>
           <transition name="slide-fade" mode="out-in">
-            <router-view></router-view>
+            <router-view :key="$route.name" :parent="this"></router-view>
           </transition>
         </v-container>
       </v-content>

@@ -12,6 +12,7 @@
 <script>
   export default {
     name: 'Diplome',
+    props: ['parent'],
     data() {
       return {
         msg: 'Bienvenue sur la page des diplômes',

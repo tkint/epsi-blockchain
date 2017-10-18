@@ -52,6 +52,7 @@
 <script>
   export default {
     name: 'Dashboard',
+    props: ['parent'],
     data() {
       return {
         msg: 'Bienvenue sur votre tableau de bord',

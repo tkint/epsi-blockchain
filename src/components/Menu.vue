@@ -40,5 +40,6 @@
 <script>
   export default {
     name: 'menu',
+    props: ['parent'],
   };
 </script>
