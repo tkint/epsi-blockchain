@@ -1,24 +1,40 @@
 <template>
   <v-app>
+    <!-- CODE FOR NAVIGATION MENU -->
     <v-navigation-drawer
       clipped
       persistent
       v-model="drawer"
       enable-resize-watcher
       app
+      v-if="this.isLog"
     >
       <menu-vertical></menu-vertical>
     </v-navigation-drawer>
-
+    <!-- CODE FOR HEADER TOOLBAR -->
     <v-toolbar app fixed clipped-left dark>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title><router-link to="/" style="text-decoration: none;">ChainMOOC</router-link></v-toolbar-title>
+      <v-toolbar-side-icon v-if="this.isLog" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-toolbar-title><router-link to="/" style="text-decoration: none; color:#fff;">ChainMOOC</router-link></v-toolbar-title>
       <v-spacer></v-spacer>
+      <!-- CODE FOR POPUP SIGN IN/SIGN UP -->
       <v-btn v-if="!this.isLog" color="blue" @click.stop="dialogSignIn = true">SIGN IN</v-btn>
-      <v-btn v-if="!this.isLog" color="blue" @click.stop="dialogSignUp = true">SIGN UP</v-btn>
-      <v-btn v-if="this.isLog" color="blue"><i class="material-icons" color="#369b74">account_circle</i></v-btn>
-
+      <v-btn v-if="!this.isLog" color="green" @click.stop="dialogSignUp = true">SIGN UP</v-btn>
+      <!-- CODE FOR USER MENU -->
+      <v-menu v-if="this.isLog" bottom left>
+        <v-btn icon slot="activator" dark>
+          <v-icon>account_circle</v-icon>
+        </v-btn>
+        <v-list>
+          <v-list-tile @click="">
+            <v-list-tile-title><router-link to="/Settings" style="text-decoration: none;">Settings</router-link></v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="">
+            <v-list-tile-title @click.prevent="isLog = false; drawer = false"><router-link to="/" style="text-decoration: none;">Log Out</router-link></v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
     </v-toolbar>
+    <!-- CODE FOR POPUP SIGN IN -->
     <v-layout row justify-center style="display:none">
       <v-dialog v-model="dialogSignIn" max-width="500px">
         <v-card>
@@ -46,6 +62,7 @@
         </v-card>
       </v-dialog>
     </v-layout>
+    <!-- CODE FOR POPUP SIGN UP -->
     <v-layout row justify-center style="display:none">
       <v-dialog v-model="dialogSignUp" max-width="500px" >
         <v-card>
@@ -100,7 +117,6 @@
   import menuVertical from './components/Menu';
 
   require('vuetify/dist/vuetify.min.css');
-
 
   export default {
     name: 'app',
