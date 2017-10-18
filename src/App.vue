@@ -1,27 +1,111 @@
 <template>
-  <v-app dark toolbar>
-    <v-toolbar class="indigo" dark fixed>
+  <v-app>
+    <v-navigation-drawer
+      clipped
+      persistent
+      v-model="drawer"
+      enable-resize-watcher
+      app
+    >
+      <menu-vertical></menu-vertical>
+    </v-navigation-drawer>
+
+    <v-toolbar app fixed clipped-left dark>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-toolbar-title> <router-link to="/" style="text-decoration: none;">ChainMOOC</router-link></v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-toolbar-title>Block Chain</v-toolbar-title>
-      <v-spacer></v-spacer>
+      <v-btn v-if="!login" color="grey" @click.stop="dialogSignIn = true">SIGN IN</v-btn>
+      <v-btn v-if="!login" color="grey" @click.stop="dialogSignUp = true">SIGN UP</v-btn>
+      <v-btn v-if="login"><i class="material-icons" color="#369b74">account_circle</i></v-btn>
+
     </v-toolbar>
+      <v-dialog v-model="dialogSignIn" persistent max-width="500px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Sign in</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container grid-list-md>
+              <v-layout wrap>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field label="Login" required></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field label="Password" required></v-text-field>
+                </v-flex>
+              </v-layout>
+            </v-container>
+            <small>* Indicates required field</small>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" flat @click.native="dialogSignIn = false">Close</v-btn>
+            <v-btn color="blue darken-1" flat @click.native="dialogSignIn = false">Log in</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <v-dialog v-model="dialogSignUp" persistent max-width="500px" >
+        <v-card>
+          <v-card-title>
+            <span class="headline">Sign up </span>
+          </v-card-title>
+          <v-card-text>
+            <v-container grid-list-md>
+              <v-layout wrap>
+                <v-flex xs12 sm6 md12>
+                  <v-text-field label="First name" required></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md12>
+                  <v-text-field label="Last name" required ></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md12>
+                  <v-text-field label="Login" required></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md12>
+                  <v-text-field label="Password" required></v-text-field>
+                </v-flex>
+              </v-layout>
+            </v-container>
+            <small>* Indicates required field</small>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" flat v-on:click="dialogSignUp = false">Close</v-btn>
+            <v-btn color="blue darken-1" flat v-on:click="dialogSignUp = false">Sign up</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     <main>
-      <v-container fluid>
-        <transition name="slide-fade" mode="out-in">
-          <router-view></router-view>
-        </transition>
-      </v-container>
+      <v-content>
+        <v-container fluid>
+          <transition name="slide-fade" mode="out-in">
+            <router-view></router-view>
+          </transition>
+        </v-container>
+      </v-content>
     </main>
+    <v-footer app fixed>
+      <span>&copy; 2017</span>
+    </v-footer>
   </v-app>
 </template>
 
+
 <script>
+  import menuVertical from './components/Menu';
+
   require('vuetify/dist/vuetify.min.css');
+
 
   export default {
     name: 'app',
+    components: { menuVertical },
     data() {
       return {
+        drawer: true,
+        dialogSignIn: false,
+        dialogSignUp: false,
         bdd_api: 'http://home.thomaskint.com/public/ChainMoocWebServices',
         bdd_api_config: {
           headers: {
@@ -76,8 +160,6 @@
     created() {
       this.registerSample();
     },
-    watch: {},
-    computed: {},
     methods: {
       login() {
         this.axios.post(`${this.bdd_api}/user/login`, this.bdd_user, this.bdd_api_config).then((response) => {
@@ -219,6 +301,8 @@
     },
   };
 </script>
+
+
 
 <style>
   .slide-fade-enter-active {
