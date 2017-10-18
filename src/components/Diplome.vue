@@ -1,15 +1,15 @@
 <template>
-  <div class="dashboard">
+  <div class="Diplome">
     <h2>{{ msg }}</h2>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'Dashboard',
+    name: 'Diplome',
     data() {
       return {
-        msg: 'Bienvenue sur la page des paramètres',
+        msg: 'Bienvenue sur la page des diplômes',
       };
     },
   };
