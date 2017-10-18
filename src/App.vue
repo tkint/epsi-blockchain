@@ -1,5 +1,7 @@
 <template>
   <v-app>
+    <!-- CODE FOR PROGRESS BAR -->
+    <v-progress-linear v-if="processing" v-bind:indeterminate="true" style="z-index: 999; position: absolute; margin: 0"></v-progress-linear>
     <!-- CODE FOR NAVIGATION MENU -->
     <v-navigation-drawer
       clipped
@@ -14,7 +16,9 @@
     <!-- CODE FOR HEADER TOOLBAR -->
     <v-toolbar app fixed clipped-left dark>
       <v-toolbar-side-icon v-if="isLog" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title><router-link to="/" style="text-decoration: none; color:#fff;">ChainMOOC</router-link></v-toolbar-title>
+      <v-toolbar-title>
+        <router-link to="/" style="text-decoration: none; color:#fff;">ChainMOOC</router-link>
+      </v-toolbar-title>
       <v-spacer></v-spacer>
       <!-- CODE FOR POPUP SIGN IN/SIGN UP -->
       <v-btn v-if="!isLog" color="blue" @click.stop="dialogSignIn = true">SIGN IN</v-btn>
@@ -25,14 +29,20 @@
           <v-icon>account_circle</v-icon>
         </v-btn>
         <v-list>
-          <v-list-tile @click="">
-            <v-list-tile-title><router-link to="/Cours/add" style="text-decoration: none;">Add courses</router-link></v-list-tile-title>
+          <v-list-tile v-if="!isStudent">
+            <v-list-tile-title>
+              <router-link to="/Cours/add" style="text-decoration: none;">Add courses</router-link>
+            </v-list-tile-title>
           </v-list-tile>
-          <v-list-tile @click="">
-            <v-list-tile-title><router-link to="/Settings" style="text-decoration: none;">Settings</router-link></v-list-tile-title>
+          <v-list-tile>
+            <v-list-tile-title>
+              <router-link to="/Settings" style="text-decoration: none;">Settings</router-link>
+            </v-list-tile-title>
           </v-list-tile>
-          <v-list-tile @click="">
-            <v-list-tile-title @click.prevent="isLog = false; drawer = false"><router-link to="/" style="text-decoration: none;">Log Out</router-link></v-list-tile-title>
+          <v-list-tile>
+            <v-list-tile-title @click.stop="disconnect" style="cursor: pointer">
+              <a>Log Out</a>
+            </v-list-tile-title>
           </v-list-tile>
         </v-list>
       </v-menu>
@@ -51,7 +61,7 @@
                   <v-text-field label="Login" required v-model="bdd_user.login"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field label="Password" required v-model="bdd_user.password"></v-text-field>
+                  <v-text-field label="Password" type="password" required v-model="bdd_user.password"></v-text-field>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -59,15 +69,15 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click.native="dialogSignIn = false">Close</v-btn>
-            <v-btn color="blue darken-1" flat @click.native="dialogSignIn = false; login();">Log in</v-btn>
+            <v-btn color="blue darken-1" flat @click.stop="dialogSignIn = false">Close</v-btn>
+            <v-btn color="blue darken-1" flat @click.stop="connect">Log in</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
     </v-layout>
     <!-- CODE FOR POPUP SIGN UP -->
     <v-layout row justify-center style="display:none">
-      <v-dialog v-model="dialogSignUp" max-width="500px" >
+      <v-dialog v-model="dialogSignUp" max-width="500px">
         <v-card>
           <v-card-title>
             <span class="headline">Sign up </span>
@@ -85,7 +95,7 @@
                   <v-text-field label="Login" required v-model="bdd_user.login"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md12>
-                  <v-text-field label="Password" required v-model="bdd_user.password"></v-text-field>
+                  <v-text-field label="Password" type="password" required v-model="bdd_user.password"></v-text-field>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -93,13 +103,14 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click.native="dialogSignUp = false">Close</v-btn>
-            <v-btn color="blue darken-1" flat @click.native="dialogSignUp = false; registerStudent">Sign up as Student</v-btn>
-            <v-btn color="blue darken-1" flat @click.native="dialogSignUp = false; registerTeacher">Sign up as Teacher</v-btn>
+            <v-btn color="blue darken-1" flat @click.native.stop="dialogSignUp = false">Close</v-btn>
+            <v-btn color="blue darken-1" flat @click.native.stop="registerStudent">Sign up as Student</v-btn>
+            <v-btn color="blue darken-1" flat @click.native.stop="registerTeacher">Sign up as Teacher</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
     </v-layout>
+    <!-- CODE FOR MAIN CONTENT -->
     <main>
       <v-content>
         <v-container fluid>
@@ -109,6 +120,7 @@
         </v-container>
       </v-content>
     </main>
+    <!-- CODE FOR FOOTER -->
     <v-footer app fixed>
       <span>&copy; 2017</span>
     </v-footer>
@@ -130,7 +142,8 @@
         drawer: true,
         dialogSignIn: false,
         dialogSignUp: false,
-        isLog: false,
+        processing: false,
+        // BDD API
         bdd_api: 'http://home.thomaskint.com/public/ChainMoocWebServices',
         bdd_api_config: {
           headers: {
@@ -174,7 +187,6 @@
         // USER
         bc_user: null,
         // USER TYPE
-        bc_user_type: null,
         bc_user_types: [
           'fr.epsi.blockchain.Student',
           'fr.epsi.blockchain.Teacher',
@@ -197,17 +209,58 @@
         bc_followed_courses: [],
       };
     },
+    watch: {
+      bdd_user: {
+        handler(val) {
+          this.bdd_user_type = val.user_type;
+        },
+        deep: true,
+      },
+    },
     created() {
-      this.registerSample();
+      this.getThemes();
+      this.getCourses();
+    },
+    computed: {
+      isLog() {
+        return this.bdd_user.id_user !== null;
+      },
+      isStudent() {
+        return this.bdd_user.user_type === this.bdd_user_types[0];
+      },
     },
     methods: {
       // USER
-      login() {
+      connect() {
+        this.processing = true;
         this.axios.post(`${this.bdd_api}/user/login`, this.bdd_user, this.bdd_api_config).then((response) => {
           this.bdd_user = response.data;
+          this.processing = false;
+          if (this.isLog) {
+            this.getBCUser(this.getUserTypeIndexByUser(this.bdd_user));
+            this.dialogSignIn = false;
+            this.$router.push('/Dashboard');
+          }
         });
-        this.isLog = true;
-        this.$router.push('/Dashboard');
+        this.getCoursesByStudent();
+      },
+      disconnect() {
+        this.processing = true;
+        this.drawer = false;
+        setTimeout(() => {
+          this.bdd_user = {
+            id_user: null,
+            id_blockchain: null,
+            user_type: null,
+            login: null,
+            password: null,
+            firstname: null,
+            lastname: null,
+          };
+          this.bc_user = null;
+          this.$router.push('/');
+          this.processing = false;
+        }, 500);
       },
       registerStudent() {
         this.register(0);
@@ -216,6 +269,7 @@
         this.register(1);
       },
       register(type) {
+        this.processing = true;
         // Get user type
         this.bdd_user_type = this.bdd_user_types[type];
         // Try to login
@@ -257,6 +311,10 @@
                   // Create the user in database
                   this.axios.post(`${this.bdd_api}/user/${this.bdd_user_type}`, this.bdd_user, this.bdd_api_config).then((responseBDDUser) => {
                     this.bdd_user = responseBDDUser.data;
+                    this.processing = false;
+                    if (this.isLog) {
+                      this.dialogSignUp = false;
+                    }
                   });
                 }
               });
@@ -276,7 +334,7 @@
                 .equals(this.bc_course.courseID);
             });
             // Get every student from BDD
-            this.axios.get(`${this.bdd_api}/user/${this.bc_user_type[0]}`, this.bdd_api_config).then((responseBDDUser) => {
+            this.axios.get(`${this.bdd_api}/user/${this.bc_user_types[0]}`, this.bdd_api_config).then((responseBDDUser) => {
               // Filter students on followedCourses
               this.bdd_users = responseBDDUser.data.filter((user) => {
                 const resource = `resource:${this.bc_user_types[0]}#`;
@@ -294,7 +352,22 @@
           });
         }
       },
+      getBCUser(type) {
+        this.axios.get(`${this.bc_api}${this.bc_user_services[type]}`, this.bc_api_config).then((responseBCUser) => {
+          this.bc_user = responseBCUser.data;
+        });
+      },
+      getUserTypeIndexByUser(bddUser) {
+        return this.bdd_user_types.findIndex(userType => userType === bddUser.user_type);
+      },
       // THEME
+      getThemes() {
+        this.processing = true;
+        this.axios.get(`${this.bdd_api}/theme`, this.bdd_api_config).then((responseBDDTheme) => {
+          this.bdd_themes = responseBDDTheme.data;
+          this.processing = false;
+        });
+      },
       createTheme() {
         this.axios.post(`${this.bdd_api}/theme`, this.bdd_theme, this.bdd_api_config).then((responseBDDTheme) => {
           this.bdd_theme = responseBDDTheme.data;
@@ -310,13 +383,17 @@
       },
       // COURSE
       getCourses() {
+        this.processing = true;
         this.axios.get(`${this.bdd_api}/course`, this.bdd_api_config).then((responseBDDCourse) => {
           this.bdd_courses = responseBDDCourse.data;
+          this.processing = false;
         });
       },
       getCoursesByStudent() {
         // Check if student
-        if (this.bc_user.studentID && this.bc_user.studentID === this.bdd_user.id_blockchain) {
+        if (this.bc_user &&
+          this.bc_user.studentID &&
+          this.bc_user.studentID === this.bdd_user.id_blockchain) {
           // Get every followedCourses from BC
           this.axios.get(`${this.bc_api}/${this.bc_followed_course}`, this.bc_api_config).then((responseBCFollowedCourse) => {
             // Filter followedCourses on studentID
@@ -414,7 +491,6 @@
     },
   };
 </script>
-
 
 
 <style>

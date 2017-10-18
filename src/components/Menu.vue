@@ -1,6 +1,6 @@
 <template>
     <v-list dense>
-      <v-list-tile @click="">
+      <v-list-tile>
         <v-list-tile-action>
           <v-icon>dashboard</v-icon>
         </v-list-tile-action>
@@ -9,7 +9,7 @@
         </v-list-tile-content>
       </v-list-tile>
 
-      <v-list-tile @click="">
+      <v-list-tile>
         <v-list-tile-action>
           <i class="fa fa-file" aria-hidden="true"></i>
         </v-list-tile-action>
@@ -17,7 +17,7 @@
           <router-link to="/Cours" style="text-decoration: none;">Courses</router-link>
         </v-list-tile-content>
       </v-list-tile>
-      <v-list-tile @click="">
+      <v-list-tile>
       <v-list-tile-action>
         <i class="fa fa-graduation-cap" aria-hidden="true"></i>
       </v-list-tile-action>
