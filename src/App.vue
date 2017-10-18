@@ -26,6 +26,9 @@
         </v-btn>
         <v-list>
           <v-list-tile @click="">
+            <v-list-tile-title><router-link to="/Cours/add" style="text-decoration: none;">Add courses</router-link></v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="">
             <v-list-tile-title><router-link to="/Settings" style="text-decoration: none;">Settings</router-link></v-list-tile-title>
           </v-list-tile>
           <v-list-tile @click="">
@@ -204,6 +207,7 @@
           this.bdd_user = response.data;
         });
         this.isLog = true;
+        this.$router.push('/Dashboard');
       },
       registerStudent() {
         this.register(0);

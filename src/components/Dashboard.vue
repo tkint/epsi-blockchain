@@ -55,6 +55,7 @@
     props: ['parent'],
     data() {
       return {
+        isLog: this.$parent.isLog,
         msg: 'Bienvenue sur votre tableau de bord',
       };
     },
