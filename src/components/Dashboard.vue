@@ -42,8 +42,10 @@
       B
     </div>
   </div>
-  <div v-else>
-    <p>You can Loggin to acces to this page.</p>
+  <div class="text-xs-center" v-else>
+    <v-alert color="info" icon="info" value="true">
+      You can Loggin to acces to this page.
+    </v-alert>
   </div>
 </template>
 
