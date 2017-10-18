@@ -103,20 +103,25 @@
     components: { menuVertical },
     data() {
       return {
+        // APP DATA
         drawer: true,
         dialogSignIn: false,
         dialogSignUp: false,
+        // BDD API
         bdd_api: 'http://home.thomaskint.com/public/ChainMoocWebServices',
         bdd_api_config: {
           headers: {
             Authorization: 'Basic dGtpbnQ6MzYyNjZacnBwYy4',
           },
         },
+        // USER TYPE
         bdd_user_type: null,
         bdd_user_types: [
           'STUDENT',
           'TEACHER',
         ],
+        // USER
+        bdd_users: [],
         bdd_user: {
           id_user: null,
           id_blockchain: null,
@@ -126,9 +131,26 @@
           firstname: null,
           lastname: null,
         },
-        bc_api: 'http://148.100.99.169:3000/api',
+        // THEME
+        bdd_themes: [],
+        bdd_theme: {
+          title: null,
+        },
+        // COURSE
+        bdd_courses: [],
+        bdd_course: {
+          id_course: null,
+          id_blockchain: null,
+          theme: null,
+          title: null,
+          description: null,
+        },
+        // BC API
+        bc_api: 'http://148.100.98.167:3000/api',
         bc_api_config: {},
+        // USER
         bc_user: null,
+        // USER TYPE
         bc_user_type: null,
         bc_user_types: [
           'fr.epsi.blockchain.Student',
@@ -142,25 +164,21 @@
           '/fr.epsi.blockchain.Student',
           '/fr.epsi.blockchain.Teacher',
         ],
-        bdd_theme: {
-          title: null,
-        },
-        bdd_course: {
-          id_course: null,
-          id_blockchain: null,
-          theme: null,
-          title: null,
-          description: null,
-        },
+        // COURSE
+        bc_courses: [],
         bc_course: null,
         bc_course_type: 'fr.epsi.blockchain.Course',
         bc_course_id: 'courseID:',
+        // FOLLOWED COURSE
+        bc_followed_course: 'fr.epsi.blockchain.FollowedCourse',
+        bc_followed_courses: [],
       };
     },
     created() {
       this.registerSample();
     },
     methods: {
+      // USER
       login() {
         this.axios.post(`${this.bdd_api}/user/login`, this.bdd_user, this.bdd_api_config).then((response) => {
           this.bdd_user = response.data;
@@ -221,6 +239,37 @@
           }
         });
       },
+      getStudentsByCourse() {
+        // Check if teacher
+        if (this.bc_user.teacherID && this.bc_user.teacherID === this.bdd_user.id_blockchain) {
+          // Get every followedCourses from BC
+          this.axios.get(`${this.bc_api}/${this.bc_followed_course}`, this.bc_api_config).then((responseBCFollowedCourse) => {
+            // Filter followedCourses on courseID
+            this.bc_followed_courses = responseBCFollowedCourse.data.filter((followedCourse) => {
+              const resource = `resource:${this.bc_course_type}#`;
+              return followedCourse.course.substring(resource.length)
+                .equals(this.bc_course.courseID);
+            });
+            // Get every student from BDD
+            this.axios.get(`${this.bdd_api}/user/${this.bc_user_type[0]}`, this.bdd_api_config).then((responseBDDUser) => {
+              // Filter students on followedCourses
+              this.bdd_users = responseBDDUser.data.filter((user) => {
+                const resource = `resource:${this.bc_user_types[0]}#`;
+                let i = 0;
+                while (i < this.bc_followed_courses.length) {
+                  if (this.bc_followed_courses[i].student.substring(resource.length)
+                      .equals(user.id_blockchain)) {
+                    return true;
+                  }
+                  i += 1;
+                }
+                return false;
+              });
+            });
+          });
+        }
+      },
+      // THEME
       createTheme() {
         this.axios.post(`${this.bdd_api}/theme`, this.bdd_theme, this.bdd_api_config).then((responseBDDTheme) => {
           this.bdd_theme = responseBDDTheme.data;
@@ -233,6 +282,44 @@
       },
       deleteTheme() {
         this.axios.delete(`${this.bdd_api}/theme/${this.bdd_theme.title}`, this.bdd_api_config);
+      },
+      // COURSE
+      getCourses() {
+        this.axios.get(`${this.bdd_api}/course`, this.bdd_api_config).then((responseBDDCourse) => {
+          this.bdd_courses = responseBDDCourse.data;
+        });
+      },
+      getCoursesByStudent() {
+        // Check if student
+        if (this.bc_user.studentID && this.bc_user.studentID === this.bdd_user.id_blockchain) {
+          // Get every followedCourses from BC
+          this.axios.get(`${this.bc_api}/${this.bc_followed_course}`, this.bc_api_config).then((responseBCFollowedCourse) => {
+            // Filter followedCourses on studentID
+            this.bc_followed_courses = responseBCFollowedCourse.data.filter((followedCourse) => {
+              const resource = `resource:${this.bc_user_types[0]}#`;
+              return followedCourse.student.substring(resource.length).equals(this.bc_user.studentID);
+            });
+            // Get every courses from BDD
+            this.axios.get(`${this.bdd_api}/course`, this.bdd_api_config).then((responseBDDCourse) => {
+              // Filter courses on followedCourses
+              this.bdd_courses = responseBDDCourse.data.filter((course) => {
+                let i = 0;
+                while (i < this.bc_followed_courses.length) {
+                  if (this.bc_followed_courses[i].courseID.equals(course.id_blockchain)) {
+                    return true;
+                  }
+                  i += 1;
+                }
+                return false;
+              });
+            });
+          });
+        }
+      },
+      getCourse(id) {
+        this.axios.get(`${this.bdd_api}/course/${id}`, this.bdd_api_config).then((responseBDDCourse) => {
+          this.bdd_course = responseBDDCourse.data;
+        });
       },
       createCourse() {
         if (this.bc_user.teacherID) {
@@ -282,6 +369,7 @@
       deleteCourse() {
         this.axios.delete(`${this.bdd_api}/course/${this.bdd_course.id_course}`, this.bdd_api_config);
       },
+      // SAMPLES
       registerSample() {
         this.bdd_user = {
           login: 'dfbfbvxvdsvxdqfqdvdvd',
