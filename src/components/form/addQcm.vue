@@ -218,7 +218,7 @@
     },
     methods: {
       submit() {
-
+        this.parent.createQCM();
       },
       reset1() {
         this.q1 = '';
