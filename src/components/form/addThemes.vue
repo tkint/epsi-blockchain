@@ -31,7 +31,7 @@
     props: ['parent'],
     data() {
       return {
-        msg: 'Add Themes',
+        msg: 'Add Theme',
         valid: true,
       };
     },

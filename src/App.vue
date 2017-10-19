@@ -36,7 +36,7 @@
           </v-list-tile>
           <v-list-tile v-if="!isStudent">
             <v-list-tile-title>
-              <router-link to="/Cours/add" style="text-decoration: none;">Add Courses</router-link>
+              <router-link to="/Cours/add" style="text-decoration: none;">Add Course</router-link>
             </v-list-tile-title>
           </v-list-tile>
           <v-list-tile>
