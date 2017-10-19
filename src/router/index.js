@@ -3,9 +3,11 @@ import Router from 'vue-router';
 import Accueil from '@/components/Accueil';
 import Dashboard from '@/components/Dashboard';
 import Cours from '@/components/Cours';
+import Themes from '@/components/Themes';
 import Diplome from '@/components/Diplome';
 import Settings from '@/components/Settings';
 import addCourses from '@/components/form/addCourses';
+import addThemes from '@/components/form/addThemes';
 
 Vue.use(Router);
 
@@ -21,6 +23,18 @@ export default new Router({
       path: '/Dashboard',
       name: 'Dashboard',
       component: Dashboard,
+      props: true,
+    },
+    {
+      path: '/Themes',
+      name: 'Themes',
+      component: Themes,
+      props: true,
+    },
+    {
+      path: '/Themes/add',
+      name: 'Add Themes',
+      component: addThemes,
       props: true,
     },
     {
