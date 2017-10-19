@@ -194,6 +194,13 @@
           title: null,
           description: null,
         },
+        // EXAM
+        bdd_exam: {
+          id_exam: null,
+          id_course: null,
+          title: null,
+          description: null,
+        },
         // BC API
         bc_api: 'http://148.100.98.167:3000/api',
         bc_api_config: {},
