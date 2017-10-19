@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard">
+  <div class="settings">
     <div v-if="parent.isLog">
       <h2>{{ msg }}</h2>
     </div>
