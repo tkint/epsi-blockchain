@@ -57,9 +57,6 @@
     created() {
       this.parent.getThemes();
     },
-    updated() {
-      this.parent.getThemes();
-    },
     methods: {
       submit() {
         this.parent.createCourse();
