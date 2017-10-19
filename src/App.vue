@@ -474,16 +474,15 @@
       deleteCourse() {
         this.axios.delete(`${this.bdd_api}/course/${this.bdd_course.id_course}`, this.bdd_api_config);
       },
-      // FOLLOWEDCOURSE
       // DIPLOMA
-      createDiplome(followedCourseID) {
+      createDiplome() {
         if (this.bc_user.teacherID) {
           this.bc_validate_diploma = {
             $class: this.bc_validate_type,
             teacher: `resource:${this.bc_user_types[1]}#${this.bc_user.teacherID}`,
-            followedCourse: `resource:#${followedCourseID}`,
+            followedCourse: `courseID:${this.bc_user.studentID}-${this.bc_course.courseID}`,
           };
-          this.axios.post(`${this.bc_api}/validate`, this.bc_validate_diploma, this.bc_api_config).then((responseBCValidate) => {
+          this.axios.post(`${this.bc_api}.Validate`, this.bc_validate_diploma, this.bc_api_config).then((responseBCValidate) => {
             this.bc_validate_diploma = responseBCValidate.data;
           });
         }
