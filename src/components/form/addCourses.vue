@@ -1,5 +1,6 @@
 <template>
   <div class="add-courses">
+    {{ parent.bdd_course }}
     <div v-if="parent.isLog">
       <h2>{{ msg }}</h2>
       <v-form v-model="valid" ref="form" lazy-validation>
@@ -27,7 +28,7 @@
           ></v-text-field>
         </v-flex>
         <v-btn
-          @click="submit"
+          @click.stop="submit"
           :disabled="!valid"
         >
           submit
@@ -53,10 +54,14 @@
         valid: true,
       };
     },
+    created() {
+      this.parent.getThemes();
+    },
+    updated() {
+      this.parent.getThemes();
+    },
     methods: {
       submit() {
-        console.log('test');
-        // const course = this.parent.bdd_course;
         this.parent.createCourse();
       },
       clear() {

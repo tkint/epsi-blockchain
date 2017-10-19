@@ -38,7 +38,7 @@
     methods: {
       getCoursesByTheme() {
         this.parent.progressing = true;
-        this.axios.get(`${this.parent.bdd_api}/cours/theme/${this.theme.title}`, this.parent.bdd_api_config).then((responseBDDCourses) => {
+        this.axios.get(`${this.parent.bdd_api}/course/theme/${this.theme.title}`, this.parent.bdd_api_config).then((responseBDDCourses) => {
           this.courses = responseBDDCourses.data;
           this.parent.progressing = false;
         });

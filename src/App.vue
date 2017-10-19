@@ -1,7 +1,8 @@
 <template>
   <v-app>
     <!-- CODE FOR PROGRESS BAR -->
-    <v-progress-linear v-if="processing" v-bind:indeterminate="true" style="z-index: 999; position: absolute; margin: 0"></v-progress-linear>
+    <v-progress-linear v-if="processing" v-bind:indeterminate="true"
+                       style="z-index: 999; position: absolute; margin: 0"></v-progress-linear>
     <!-- CODE FOR NAVIGATION MENU -->
     <v-navigation-drawer
       clipped
@@ -424,12 +425,16 @@
         });
       },
       createCourse() {
+        console.log('STEP 1');
         if (this.bc_user.teacherID) {
+          console.log('STEP 2');
           // Get theme
           this.axios.get(`${this.bdd_api}/theme`, this.bdd_course.theme, this.bdd_api_config).then((responseBDDTheme) => {
             // Verify if theme exists
+            console.log('STEP 3');
             if (responseBDDTheme.data) {
               // Get last entity
+              console.log('STEP 4');
               this.axios.get(`${this.bdd_api}/course/last`, this.bdd_api_config).then((responseBDDCourseID) => {
                 // Build the id
                 let id = responseBDDCourseID.data.id_blockchain;
