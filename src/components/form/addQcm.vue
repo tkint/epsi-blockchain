@@ -29,7 +29,7 @@
               required
             ></v-text-field>
             <v-text-field
-              label="Réponse A"
+              :label="'Réponse ' + (i + 1)"
               v-model="answer.title"
               required
               v-for="(answer, i) in question.answers"
@@ -62,179 +62,44 @@
         stepper: 0,
         msg: 'Add QCM',
         valid: true,
+        nbQuestions: 5,
+        nbAnswers: 4,
         exam: {
           id_exam: null,
           id_course: null,
           title: null,
           description: null,
-          questions: [
-            {
-              id_question: null,
-              id_exam: null,
-              title: null,
-              description: null,
-              answers: [
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-              ],
-            },
-            {
-              id_question: null,
-              id_exam: null,
-              title: null,
-              description: null,
-              answers: [
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-              ],
-            },
-            {
-              id_question: null,
-              id_exam: null,
-              title: null,
-              description: null,
-              answers: [
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-              ],
-            },
-            {
-              id_question: null,
-              id_exam: null,
-              title: null,
-              description: null,
-              answers: [
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-              ],
-            },
-            {
-              id_question: null,
-              id_exam: null,
-              title: null,
-              description: null,
-              answers: [
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-                {
-                  id_answer: null,
-                  id_question: null,
-                  title: null,
-                  correct: false,
-                },
-              ],
-            },
-          ],
+          questions: [],
         },
       };
     },
+    created() {
+      this.initExam();
+    },
     methods: {
+      initExam() {
+        for (let i = 0; i < this.nbQuestions; i += 1) {
+          const question = {
+            id_question: null,
+            id_exam: null,
+            title: null,
+            description: null,
+            answers: [],
+          };
+          for (let j = 0; j < this.nbAnswers; j += 1) {
+            const answer = {
+              id_answer: null,
+              id_question: null,
+              title: null,
+              correct: false,
+            };
+            question.answers.push(answer);
+          }
+          this.exam.questions.push(question);
+        }
+      },
       submit() {
-//        this.parent.createQCM();
+        this.parent.createExam();
       },
       reset(index) {
         this.exam.questions[index].answers.forEach((answer) => {

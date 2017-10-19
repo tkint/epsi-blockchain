@@ -554,6 +554,10 @@
           });
         }
       },
+      // EXAM
+      createExam() {
+        console.log('Exam created');
+      },
       // DIPLOMA
       createDiplome() {
         if (this.bc_user.teacherID) {
