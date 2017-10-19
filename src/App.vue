@@ -194,6 +194,13 @@
           title: null,
           description: null,
         },
+        // EXAM
+        bdd_exam: {
+          id_exam: null,
+          id_course: null,
+          title: null,
+          description: null,
+        },
         // BC API
         bc_api: 'http://148.100.98.167:3000/api',
         bc_api_config: {},
@@ -220,6 +227,9 @@
         // FOLLOWED COURSE
         bc_followed_course_type: 'fr.epsi.blockchain.FollowedCourse',
         bc_followed_courses: [],
+        // DIPLOMA
+        bc_validate_diploma: null,
+        bc_validate_type: 'fr.epsi.blockchain.Validate',
         bc_followed_course: null,
       };
     },
@@ -533,6 +543,19 @@
           // Create asset
           this.axios.post(`${this.bc_api}/${this.bc_course_type}`, this.bc_course, this.bc_api_config).then((responseBCCourse) => {
             this.bc_followed_course = responseBCCourse.data;
+          });
+        }
+      },
+      // DIPLOMA
+      createDiplome() {
+        if (this.bc_user.teacherID) {
+          this.bc_validate_diploma = {
+            $class: this.bc_validate_type,
+            teacher: `resource:${this.bc_user_types[1]}#${this.bc_user.teacherID}`,
+            followedCourse: `courseID:${this.bc_user.studentID}-${this.bc_course.courseID}`,
+          };
+          this.axios.post(`${this.bc_api}.Validate`, this.bc_validate_diploma, this.bc_api_config).then((responseBCValidate) => {
+            this.bc_validate_diploma = responseBCValidate.data;
           });
         }
       },

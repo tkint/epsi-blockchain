@@ -4,7 +4,6 @@ import Accueil from '@/components/Accueil';
 import Dashboard from '@/components/Dashboard';
 import Cours from '@/components/Cours';
 import Themes from '@/components/Themes';
-import Diplome from '@/components/Diplome';
 import Settings from '@/components/Settings';
 import Theme from '@/components/Theme';
 import addCourses from '@/components/form/addCourses';
@@ -40,6 +39,12 @@ export default new Router({
       props: true,
     },
     {
+      path: '/Cours/',
+      name: 'Cours Liste',
+      component: Cours,
+      props: true,
+    },
+    {
       path: '/Cours/:id',
       name: 'Cours',
       component: Cours,
@@ -49,12 +54,6 @@ export default new Router({
       path: '/Cours/add',
       name: 'Add Cours',
       component: addCourses,
-      props: true,
-    },
-    {
-      path: '/Diplome',
-      name: 'Diplome',
-      component: Diplome,
       props: true,
     },
     {
