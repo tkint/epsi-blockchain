@@ -385,6 +385,7 @@
         this.processing = true;
         this.axios.post(`${this.bdd_api}/theme`, this.bdd_theme, this.bdd_api_config).then((responseBDDTheme) => {
           this.bdd_theme = responseBDDTheme.data;
+          this.bdd_themes.push(this.bdd_theme);
           this.processing = false;
         });
       },
@@ -483,6 +484,7 @@
                     // Create course in database
                     this.axios.post(`${this.bdd_api}/course`, this.bdd_course, this.bdd_api_config).then((responseBDDCourse) => {
                       this.bdd_course = responseBDDCourse.data;
+                      this.bdd_courses.push(this.bdd_course);
                       this.processing = false;
                     });
                   }
