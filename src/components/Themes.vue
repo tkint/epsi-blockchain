@@ -1,13 +1,21 @@
 <template>
   <div class="themes">
-    <div v-if="parent.isLog">
-      <h2>{{ msg }}</h2>
+    <h2>{{ msg }}</h2>
+    <div>
+      <p v-html="description">
+      </p>
     </div>
-    <div class="text-xs-center" v-else>
-      <v-alert color="info" icon="info" value="true">
-        You can Loggin to acces to this page.
-      </v-alert>
-    </div>
+    <v-container grid-list-md text-xs-left>
+      <v-layout row wrap>
+        <v-flex xs3 v-for="(theme, index) in parent.bdd_themes" @click.stop="openTheme(theme.title)" :key="index" style="cursor: pointer;">
+          <v-card theme--dark primary>
+            <v-card-title>
+              {{ theme.title }}
+            </v-card-title>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </div>
 </template>
 
@@ -18,7 +26,16 @@
     data() {
       return {
         msg: 'Themes',
+        description: null,
       };
+    },
+    created() {
+      this.parent.getThemes();
+    },
+    methods: {
+      openTheme(themeTitle) {
+        this.$router.push({ name: 'Theme', params: { title: themeTitle } });
+      },
     },
   };
 </script>

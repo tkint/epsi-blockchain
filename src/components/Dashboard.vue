@@ -10,7 +10,7 @@
               <div>
                 <ul>
                   <li v-for="(course, index) in parent.getCoursesByStudent">
-                    <a href="#">Cours 1</a>
+                    <router-link :to="{ name: 'Cours', params: { id: course.id_course  }}">{{ course.title }}</router-link>
                   </li>
                 </ul>
               </div>
