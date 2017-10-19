@@ -1,24 +1,43 @@
 <template>
   <div class="cours">
-    <div v-if="parent.isLog">
-      <h2>{{ msg }}</h2>
-    </div>
-    <div class="text-xs-center" v-else>
-      <v-alert color="info" icon="info" value="true">
-        You can Loggin to acces to this page.
-      </v-alert>
-    </div>
+    {{ $route.params.slug }}
+    <h2>{{ course.theme.title }} {{ course.title }}</h2>
+    <v-container>
+      <v-layout row wrap>
+        <v-flex>
+          <v-card theme--dark primary>
+            <v-card-text>
+              <div>
+                {{ course.description }}
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'Course',
+    name: 'Cours',
     props: ['parent'],
     data() {
       return {
-        msg: 'Courses',
+        course: null,
       };
+    },
+    created() {
+      this.getCourse();
+    },
+    methods: {
+      getCourse() {
+        this.parent.progressing = true;
+        this.axios.get(`${this.parent.bdd_api}/course/${this.$route.params.slug}`, this.parent.bdd_api_config).then((responseBDDCourse) => {
+          this.course = responseBDDCourse.data;
+          this.parent.progressing = false;
+        });
+      },
     },
   };
 </script>

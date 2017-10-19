@@ -9,11 +9,9 @@
               <h3 class="text-xs-center">Cours suivis</h3>
               <div>
                 <ul>
-                  <li><a href="#">Cours 1</a></li>
-                  <li><a href="#">Cours 2</a></li>
-                  <li><a href="#">Cours 3</a></li>
-                  <li><a href="#">Cours 4</a></li>
-                  <li><a href="#">Cours 5</a></li>
+                  <li v-for="(course, index) in parent.getCoursesByStudent">
+                    <a href="#">Cours 1</a>
+                  </li>
                 </ul>
               </div>
             </v-card-text>
@@ -49,8 +47,12 @@
     props: ['parent'],
     data() {
       return {
-        msg: 'Dashboard',
+        studentCourses: [],
+        msg: 'Bienvenue sur votre tableau de bord',
       };
+    },
+    created() {
+      this.parent.getCoursesByStudent();
     },
   };
 </script>
