@@ -377,6 +377,7 @@
       createTheme() {
         this.axios.post(`${this.bdd_api}/theme`, this.bdd_theme, this.bdd_api_config).then((responseBDDTheme) => {
           this.bdd_theme = responseBDDTheme.data;
+          this.bdd_themes.push(this.bdd_theme);
         });
       },
       updateTheme(theme) {

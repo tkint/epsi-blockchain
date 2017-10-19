@@ -16,6 +16,15 @@
         </v-btn>
         <v-btn @click="clear">clear</v-btn>
       </v-form>
+      <br>
+      <h3>List of existing themes</h3>
+      <v-list v-bind:item="parent.bdd_themes" item-text="title" >
+          <v-list-tile v-for="item in parent.bdd_themes">
+            <v-list-tile-content>
+              <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+      </v-list>
     </div>
     <div class="text-xs-center" v-else>
       <v-alert color="info" icon="info" value="true">
@@ -36,9 +45,10 @@
       };
     },
     methods: {
+      created() {
+        this.parent.getThemes();
+      },
       submit() {
-        console.log('test');
-        // const course = this.parent.bdd_course;
         this.parent.createTheme();
       },
       clear() {
