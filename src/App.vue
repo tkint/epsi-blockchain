@@ -156,6 +156,7 @@
         dialogSignIn: false,
         dialogSignUp: false,
         processing: false,
+        cookieLife: 1,
         // BDD API
         bdd_api: 'http://home.thomaskint.com/public/ChainMoocWebServices',
         bdd_api_config: {
@@ -277,7 +278,7 @@
         this.axios.post(`${this.bdd_api}/user/login`, this.bdd_user, this.bdd_api_config).then((response) => {
           this.bdd_user = response.data;
           this.processing = false;
-          this.$cookie.set('id_user', this.bdd_user.id_user, 1);
+          this.$cookie.set('id_user', this.bdd_user.id_user, this.cookieLife);
           if (this.isLog) {
             this.getBCUser(this.getUserTypeIndexByUser(this.bdd_user));
             this.dialogSignIn = false;
@@ -354,6 +355,7 @@
                   // Create the user in database
                   this.axios.post(`${this.bdd_api}/user/${this.bdd_user_type}`, this.bdd_user, this.bdd_api_config).then((responseBDDUser) => {
                     this.bdd_user = responseBDDUser.data;
+                    this.$cookie.set('id_user', this.bdd_user.id_user, this.cookieLife);
                     this.processing = false;
                     if (this.isLog) {
                       this.dialogSignUp = false;
