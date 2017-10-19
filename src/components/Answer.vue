@@ -1,9 +1,7 @@
 <template>
-  <div class="answer">
-    <v-checkbox></v-checkbox>{{ answer.title }}
-    <br />
-    {{ answer.description }}
-  </div>
+    <v-flex xs3>
+      <v-checkbox :label="answer.title"></v-checkbox>
+    </v-flex>
 </template>
 
 <script>
