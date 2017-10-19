@@ -55,7 +55,6 @@
     props: ['parent'],
     data() {
       return {
-        msg: 'Dashboard',
         msg: 'Bienvenue sur votre tableau de bord',
       };
     },
