@@ -9,6 +9,7 @@ import Settings from '@/components/Settings';
 import Theme from '@/components/Theme';
 import addCourses from '@/components/form/addCourses';
 import addThemes from '@/components/form/addThemes';
+import addQcm from '@/components/form/addQcm';
 
 Vue.use(Router);
 
@@ -68,5 +69,12 @@ export default new Router({
       component: Theme,
       props: true,
     },
+    {
+      path: '/add-qcm',
+      name: 'Add QCM',
+      component: addQcm,
+      props: true,
+    },
+
   ],
 });
