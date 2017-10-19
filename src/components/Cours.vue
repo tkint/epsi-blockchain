@@ -1,5 +1,5 @@
 <template>
-  <div v-if="this.$parent.isLog" class="cours">
+  <div v-if="parent.isLog" class="cours">
     <h2>{{ msg }}</h2>
   </div>
   <div class="text-xs-center" v-else>
@@ -16,7 +16,7 @@
     props: ['parent'],
     data() {
       return {
-        msg: 'Bienvenue sur la page des cours',
+        msg: 'Courses',
       };
     },
   };

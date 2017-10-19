@@ -1,5 +1,5 @@
 <template>
-  <div v-if="this.$parent.isLog" class="dashboard">
+  <div v-if="parent.isLog" class="dashboard">
     <h2>{{ msg }}</h2>
     <v-container grid-list-md text-xs-left>
       <v-layout row wrap>
@@ -35,12 +35,6 @@
         </v-flex>
       </v-layout>
     </v-container>
-    <div v-if="this.$parent.bdd_user_types === 'TEACHER'">
-      A
-    </div>
-    <div v-else-if="this.$parent.bdd_user_types === 'STUDENT'">
-      B
-    </div>
   </div>
   <div class="text-xs-center" v-else>
     <v-alert color="info" icon="info" value="true">
@@ -56,7 +50,7 @@
     data() {
       return {
         isLog: this.$parent.isLog,
-        msg: 'Bienvenue sur votre tableau de bord',
+        msg: 'Dashboard',
       };
     },
   };

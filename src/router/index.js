@@ -31,8 +31,9 @@ export default new Router({
       children: [
         {
           // Note: No leading slash. This can trip people up sometimes.
-          path: 'add',
+          path: '/Cours-add',
           component: addCourses,
+          props: true,
         },
       ],
       props: true,
