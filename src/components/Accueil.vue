@@ -2,8 +2,8 @@
   <div class="accueil">
     <h2>{{ msg }}</h2>
     <div>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      <p v-html="description">
+      </p>
     </div>
     <v-container grid-list-md text-xs-left>
       <v-layout row wrap>
@@ -14,7 +14,7 @@
               <div>
                 <ul>
                   <li v-for="(theme, index) in parent.bdd_themes">
-                    <a href="#">{{ theme.title }}</a>
+                    <router-link :to="{ name: 'Theme', params: { theme: theme.title  }}">{{ theme.title }}</router-link>
                   </li>
                 </ul>
               </div>
@@ -28,7 +28,7 @@
               <div>
                 <ul>
                   <li v-for="(course, index) in parent.bdd_courses">
-                    <a href="#">{{ course.title }}</a>
+                    <router-link :to="{ name: 'Cours', params: { cours: cours.id_course  }}">{{ course.title }}</router-link>
                   </li>
                 </ul>
               </div>
@@ -41,9 +41,13 @@
               <h3 class="text-xs-center">Statistics</h3>
               <div>
                 <ul>
-                  <li>Bachelor - 3</li>
-                  <li>Master - 4</li>
-                  <li>Doctorat - 34</li>
+                  <li>Students: {{ statistics.nb_students }}</li>
+                  <li>Teachers: {{ statistics.nb_teachers }}</li>
+                  <li>Themes: {{ statistics.nb_themes }}</li>
+                  <li>Courses: {{ statistics.nb_courses }}</li>
+                  <li>Exams: {{ statistics.nb_exams }}</li>
+                  <li>Followed courses: {{ statistics.nb_followedCourses }}</li>
+                  <li>Diplomas: {{ statistics.nb_diplomas }}</li>
                 </ul>
               </div>
             </v-card-text>
@@ -61,7 +65,34 @@
     data() {
       return {
         msg: 'Welcome to Your ChainMOOC !',
+        description: 'ChainMOOC is an online platform providing Massive Open Online Courses to everyone.<br/><br/>' +
+        'You just have to register as a student and follow courses you are interested in!<br/>' +
+        'At the end of a course, you have to pass an exam. If your score is good enough, the teacher in charge of this course ' +
+        'will validate your diploma. It is as easy as it looks like!<br/><br/>' +
+        'In the case you would like to give some of your knowledge to students, you can register as a teacher and create your own course.<br/>' +
+        'You will have to follow your students progress and help them to validate your course.',
+        statistics: {
+          nb_students: 0,
+          nb_teachers: 0,
+          nb_themes: 0,
+          nb_courses: 0,
+          nb_exams: 0,
+          nb_followedCourses: 0,
+          nb_diplomas: 0,
+        },
       };
+    },
+    created() {
+      this.getStatistics();
+    },
+    methods: {
+      getStatistics() {
+        this.parent.progressing = true;
+        this.axios.get(`${this.parent.bdd_api}/statistics`, this.parent.bdd_api_config).then((responseBDDStatistics) => {
+          this.statistics = responseBDDStatistics.data;
+          this.parent.progressing = false;
+        });
+      },
     },
   };
 </script>

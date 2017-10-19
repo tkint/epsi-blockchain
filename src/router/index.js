@@ -5,6 +5,7 @@ import Dashboard from '@/components/Dashboard';
 import Cours from '@/components/Cours';
 import Diplome from '@/components/Diplome';
 import Settings from '@/components/Settings';
+import Theme from '@/components/Theme';
 import addCourses from '@/components/form/addCourses';
 
 Vue.use(Router);
@@ -48,6 +49,12 @@ export default new Router({
       path: '/Settings',
       name: 'Settings',
       component: Settings,
+      props: true,
+    },
+    {
+      path: '/Theme/:theme',
+      name: 'Theme',
+      component: Theme,
       props: true,
     },
   ],
