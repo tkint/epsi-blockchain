@@ -17,7 +17,7 @@
     props: ['parent'],
     data() {
       return {
-        msg: 'Bienvenue sur la page des diplômes',
+        msg: 'Diplomas',
       };
     },
   };

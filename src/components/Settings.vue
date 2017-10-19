@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard">
+  <div class="settings">
     <div v-if="parent.isLog">
       <h2>{{ msg }}</h2>
     </div>
@@ -17,7 +17,7 @@
     props: ['parent'],
     data() {
       return {
-        msg: 'Bienvenue sur la page des paramètres',
+        msg: 'Settings',
       };
     },
   };
