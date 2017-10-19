@@ -35,6 +35,12 @@
         </v-flex>
       </v-layout>
     </v-container>
+    <div v-if="parent.bdd_user_type === 'TEACHER'">
+      A
+    </div>
+    <div v-else-if="parent.bdd_user_type === 'STUDENT'">
+      B
+    </div>
   </div>
   <div class="text-xs-center" v-else>
     <v-alert color="info" icon="info" value="true">
@@ -49,8 +55,8 @@
     props: ['parent'],
     data() {
       return {
-        isLog: this.$parent.isLog,
         msg: 'Dashboard',
+        msg: 'Bienvenue sur votre tableau de bord',
       };
     },
   };

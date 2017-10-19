@@ -10,14 +10,12 @@
         <v-flex xs4>
           <v-card theme--dark primary>
             <v-card-text class="px-0">
-              <h3 class="text-xs-center">Courses</h3>
+              <h3 class="text-xs-center">Themes</h3>
               <div>
                 <ul>
-                  <li><a href="#">JAVA</a></li>
-                  <li><a href="#">VueJS</a></li>
-                  <li><a href="#">PHP</a></li>
-                  <li><a href="#">HTML</a></li>
-                  <li><a href="#">CSS</a></li>
+                  <li v-for="(theme, index) in parent.bdd_themes">
+                    <a href="#">{{ theme.title }}</a>
+                  </li>
                 </ul>
               </div>
             </v-card-text>
@@ -26,12 +24,12 @@
         <v-flex xs4>
           <v-card theme--dark primary>
             <v-card-text class="px-0">
-              <h3 class="text-xs-center">Diplomas</h3>
+              <h3 class="text-xs-center">Courses</h3>
               <div>
                 <ul>
-                  <li>Bachelor</li>
-                  <li>Master</li>
-                  <li>Doctorat</li>
+                  <li v-for="(course, index) in parent.bdd_courses">
+                    <a href="#">{{ course.title }}</a>
+                  </li>
                 </ul>
               </div>
             </v-card-text>
