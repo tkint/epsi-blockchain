@@ -1,7 +1,8 @@
 <template>
   <v-app>
     <!-- CODE FOR PROGRESS BAR -->
-    <v-progress-linear v-if="processing" v-bind:indeterminate="true" style="z-index: 999; position: absolute; margin: 0"></v-progress-linear>
+    <v-progress-linear v-if="processing" v-bind:indeterminate="true"
+                       style="z-index: 999; position: absolute; margin: 0"></v-progress-linear>
     <!-- CODE FOR NAVIGATION MENU -->
     <v-navigation-drawer
       clipped
@@ -31,7 +32,12 @@
         <v-list>
           <v-list-tile v-if="!isStudent">
             <v-list-tile-title>
-              <router-link to="/Cours/add" style="text-decoration: none;">Add courses</router-link>
+              <router-link to="/Themes/add" style="text-decoration: none;">Add Theme</router-link>
+            </v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile v-if="!isStudent">
+            <v-list-tile-title>
+              <router-link to="/Cours/add" style="text-decoration: none;">Add Course</router-link>
             </v-list-tile-title>
           </v-list-tile>
           <v-list-tile>
@@ -56,14 +62,16 @@
           </v-card-title>
           <v-card-text>
             <v-container grid-list-md>
-              <v-layout wrap>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field label="Login" required v-model="bdd_user.login"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field label="Password" type="password" required v-model="bdd_user.password"></v-text-field>
-                </v-flex>
-              </v-layout>
+              <form method="get" v-on:submit.prevent="connect">
+                <v-layout wrap>
+                  <v-flex xs12 sm6 md4>
+                    <v-text-field label="Login" required v-model="bdd_user.login" autofocus></v-text-field>
+                  </v-flex>
+                  <v-flex xs12 sm6 md4>
+                    <v-text-field label="Password" type="password" required v-model="bdd_user.password"></v-text-field>
+                  </v-flex>
+                </v-layout>
+              </form>
             </v-container>
             <small>* Indicates required field</small>
           </v-card-text>
@@ -205,11 +213,12 @@
         bc_course_type: 'fr.epsi.blockchain.Course',
         bc_course_id: 'courseID:',
         // FOLLOWED COURSE
-        bc_followed_course: 'fr.epsi.blockchain.FollowedCourse',
+        bc_followed_course_type: 'fr.epsi.blockchain.FollowedCourse',
         bc_followed_courses: [],
         // DIPLOMA
         bc_validate_diploma: null,
         bc_validate_type: 'fr.epsi.blockchain.Validate',
+        bc_followed_course: null,
       };
     },
     watch: {
@@ -326,10 +335,11 @@
         });
       },
       getStudentsByCourse() {
+        this.processing = true;
         // Check if teacher
         if (this.bc_user.teacherID && this.bc_user.teacherID === this.bdd_user.id_blockchain) {
           // Get every followedCourses from BC
-          this.axios.get(`${this.bc_api}/${this.bc_followed_course}`, this.bc_api_config).then((responseBCFollowedCourse) => {
+          this.axios.get(`${this.bc_api}/${this.bc_followed_course_type}`, this.bc_api_config).then((responseBCFollowedCourse) => {
             // Filter followedCourses on courseID
             this.bc_followed_courses = responseBCFollowedCourse.data.filter((followedCourse) => {
               const resource = `resource:${this.bc_course_type}#`;
@@ -351,13 +361,16 @@
                 }
                 return false;
               });
+              this.processing = false;
             });
           });
         }
       },
       getBCUser(type) {
-        this.axios.get(`${this.bc_api}${this.bc_user_services[type]}`, this.bc_api_config).then((responseBCUser) => {
+        this.processing = true;
+        this.axios.get(`${this.bc_api}${this.bc_user_services[type]}/${this.bdd_user.id_blockchain}`, this.bc_api_config).then((responseBCUser) => {
           this.bc_user = responseBCUser.data;
+          this.processing = false;
         });
       },
       getUserTypeIndexByUser(bddUser) {
@@ -372,17 +385,25 @@
         });
       },
       createTheme() {
+        this.processing = true;
         this.axios.post(`${this.bdd_api}/theme`, this.bdd_theme, this.bdd_api_config).then((responseBDDTheme) => {
           this.bdd_theme = responseBDDTheme.data;
+          this.bdd_themes.push(this.bdd_theme);
+          this.processing = false;
         });
       },
       updateTheme(theme) {
+        this.processing = true;
         this.axios.put(`${this.bdd_api}/theme/${this.bdd_theme.title}`, theme, this.bdd_api_config).then((responseBDDTheme) => {
           this.bdd_theme = responseBDDTheme.data;
+          this.processing = false;
         });
       },
       deleteTheme() {
-        this.axios.delete(`${this.bdd_api}/theme/${this.bdd_theme.title}`, this.bdd_api_config);
+        this.processing = true;
+        this.axios.delete(`${this.bdd_api}/theme/${this.bdd_theme.title}`, this.bdd_api_config).then(() => {
+          this.processing = false;
+        });
       },
       // COURSE
       getCourses() {
@@ -393,12 +414,13 @@
         });
       },
       getCoursesByStudent() {
+        this.processing = true;
         // Check if student
         if (this.bc_user &&
           this.bc_user.studentID &&
           this.bc_user.studentID === this.bdd_user.id_blockchain) {
           // Get every followedCourses from BC
-          this.axios.get(`${this.bc_api}/${this.bc_followed_course}`, this.bc_api_config).then((responseBCFollowedCourse) => {
+          this.axios.get(`${this.bc_api}/${this.bc_followed_course_type}`, this.bc_api_config).then((responseBCFollowedCourse) => {
             // Filter followedCourses on studentID
             this.bc_followed_courses = responseBCFollowedCourse.data.filter((followedCourse) => {
               const resource = `resource:${this.bc_user_types[0]}#`;
@@ -417,17 +439,24 @@
                 }
                 return false;
               });
+              this.processing = false;
             });
           });
         }
       },
       getCourse(id) {
+        this.processing = true;
         this.axios.get(`${this.bdd_api}/course/${id}`, this.bdd_api_config).then((responseBDDCourse) => {
           this.bdd_course = responseBDDCourse.data;
+          this.axios.get(`${this.bc_api}/${this.bc_course_type}/${this.bdd_course.id_blockchain}`, this.bc_api_config).then((responseBCCourse) => {
+            this.bc_course = responseBCCourse.data;
+          });
+          this.processing = false;
         });
       },
       createCourse() {
-        if (this.bc_user.teacherID) {
+        this.processing = true;
+        if (this.bc_user && this.bc_user.teacherID) {
           // Get theme
           this.axios.get(`${this.bdd_api}/theme`, this.bdd_course.theme, this.bdd_api_config).then((responseBDDTheme) => {
             // Verify if theme exists
@@ -449,15 +478,17 @@
                   teacher: `resource:${this.bc_user_types[1]}#${this.bc_user.teacherID}`,
                 };
                 // Create asset
-                this.axios.post(`${this.bc_api}/course`, this.bc_course, this.bc_api_config).then((responseBCCourse) => {
+                this.axios.post(`${this.bc_api}/${this.bc_course_type}`, this.bc_course, this.bc_api_config).then((responseBCCourse) => {
                   this.bc_course = responseBCCourse.data;
                   // If the asset has been created
                   if (this.bc_course.courseID) {
                     // Get id from asset
                     this.bdd_course.id_blockchain = this.bc_course.courseID;
-                    // Create user in database
+                    // Create course in database
                     this.axios.post(`${this.bdd_api}/course`, this.bdd_course, this.bdd_api_config).then((responseBDDCourse) => {
                       this.bdd_course = responseBDDCourse.data;
+                      this.bdd_courses.push(this.bdd_course);
+                      this.processing = false;
                     });
                   }
                 });
@@ -467,12 +498,41 @@
         }
       },
       updateCourse() {
+        this.processing = true;
         this.axios.put(`${this.bdd_api}/course`, this.bdd_course, this.bdd_api_config).then((responseBDDTheme) => {
           this.bdd_course = responseBDDTheme.data;
+          this.processing = false;
         });
       },
       deleteCourse() {
-        this.axios.delete(`${this.bdd_api}/course/${this.bdd_course.id_course}`, this.bdd_api_config);
+        this.processing = true;
+        this.axios.delete(`${this.bdd_api}/course/${this.bdd_course.id_course}`, this.bdd_api_config).then(() => {
+          this.processing = false;
+        });
+      },
+      // FOLLOWED COURSE
+      getFollowedCourses() {
+        this.processing = true;
+        this.axios.get(`${this.bc_api}/${this.bc_followed_course_type}`, this.bc_api_config).then((responseBDDFollowedCourse) => {
+          this.bc_followed_courses = responseBDDFollowedCourse.data;
+          this.processing = false;
+        });
+      },
+      createFollowedCourse() {
+        if (this.bc_user && this.bc_user.studentID && this.bc_course) {
+          // Build the blockchain asset
+          this.bc_course = {
+            $class: this.bc_followed_course_type,
+            followedCourseID: `courseID:${this.bc_user.studentID}-${this.bc_course.courseID}`,
+            course: `resource:${this.bc_course_type}#${this.bc_course.courseID}`,
+            student: `resource:${this.bc_user_types[0]}#${this.bc_user.studentID}`,
+            score: 0,
+          };
+          // Create asset
+          this.axios.post(`${this.bc_api}/${this.bc_course_type}`, this.bc_course, this.bc_api_config).then((responseBCCourse) => {
+            this.bc_followed_course = responseBCCourse.data;
+          });
+        }
       },
       // DIPLOMA
       createDiplome() {

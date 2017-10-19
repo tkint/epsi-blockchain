@@ -1,40 +1,30 @@
 <template>
-  <div class="add-courses">
+  <div class="add-themes">
     <div v-if="parent.isLog">
       <h2>{{ msg }}</h2>
       <v-form v-model="valid" ref="form" lazy-validation>
         <v-text-field
           label="Title"
-          v-model="parent.bdd_course.title"
+          v-model="parent.bdd_theme.title"
           required
         ></v-text-field>
-        <v-select
-          v-bind:items="parent.bdd_themes"
-          v-model="parent.bdd_course.theme"
-          item-text="title"
-          item-value="title"
-          label="Themes"
-          single-line
-          bottom
-        ></v-select>
-        <v-flex>
-          <v-text-field
-            name="description-courses"
-            label="Description"
-            v-model="parent.bdd_course.description"
-            value=""
-            multi-line
-            required
-          ></v-text-field>
-        </v-flex>
         <v-btn
-          @click.stop="submit"
+          @click="submit"
           :disabled="!valid"
         >
           submit
         </v-btn>
         <v-btn @click="clear">clear</v-btn>
       </v-form>
+      <br>
+      <h3>List of existing themes</h3>
+      <v-list v-bind:item="parent.bdd_themes" item-text="title" >
+          <v-list-tile v-for="(item, index) in parent.bdd_themes" :key="index">
+            <v-list-tile-content>
+              <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+      </v-list>
     </div>
     <div class="text-xs-center" v-else>
       <v-alert color="info" icon="info" value="true">
@@ -46,20 +36,20 @@
 
 <script>
   export default {
-    name: 'addCourses',
+    name: 'addThemes',
     props: ['parent'],
     data() {
       return {
-        msg: 'Add Courses',
+        msg: 'Add Theme',
         valid: true,
       };
     },
-    created() {
-      this.parent.getThemes();
-    },
     methods: {
+      created() {
+        this.parent.getThemes();
+      },
       submit() {
-        this.parent.createCourse();
+        this.parent.createTheme();
       },
       clear() {
         this.$refs.form.reset();

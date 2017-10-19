@@ -14,7 +14,7 @@
               <div>
                 <ul>
                   <li v-for="(theme, index) in parent.bdd_themes">
-                    <router-link :to="{ name: 'Theme', params: { theme: theme.title  }}">{{ theme.title }}</router-link>
+                    <router-link :to="{ name: 'Theme', params: { title: theme.title  }}">{{ theme.title }}</router-link>
                   </li>
                 </ul>
               </div>
@@ -28,7 +28,7 @@
               <div>
                 <ul>
                   <li v-for="(course, index) in parent.bdd_courses">
-                    <router-link :to="{ name: 'Cours', params: { cours: cours.id_course  }}">{{ course.title }}</router-link>
+                    <router-link :to="{ name: 'Cours', params: { id: course.id_course  }}">{{ course.title }}</router-link>
                   </li>
                 </ul>
               </div>

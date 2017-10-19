@@ -1,12 +1,14 @@
 <template>
   <div class="cours">
-    {{ $route.params.slug }}
-    <h2>{{ course.theme.title }} {{ course.title }}</h2>
+    <h2>
+      <router-link :to="{ name: 'Theme', params: { title: course.theme  }}" v-if="course.theme">{{ course.theme }}</router-link>
+      - {{ course.title }}<v-btn @click.stop="passExam = !passExam">Pass exam</v-btn></h2>
     <v-container>
       <v-layout row wrap>
         <v-flex>
           <v-card theme--dark primary>
-            <v-card-text>
+            <exam :course="course" :parent="parent" v-if="passExam"></exam>
+            <v-card-text v-else>
               <div>
                 {{ course.description }}
               </div>
@@ -19,12 +21,23 @@
 </template>
 
 <script>
+  import Exam from './Exam';
+
   export default {
     name: 'Cours',
     props: ['parent'],
+    components: {
+      Exam,
+    },
     data() {
       return {
-        course: null,
+        passExam: false,
+        course: {
+          id_course: null,
+          theme: null,
+          title: null,
+          description: null,
+        },
       };
     },
     created() {
@@ -33,7 +46,7 @@
     methods: {
       getCourse() {
         this.parent.progressing = true;
-        this.axios.get(`${this.parent.bdd_api}/course/${this.$route.params.slug}`, this.parent.bdd_api_config).then((responseBDDCourse) => {
+        this.axios.get(`${this.parent.bdd_api}/course/${this.$route.params.id}`, this.parent.bdd_api_config).then((responseBDDCourse) => {
           this.course = responseBDDCourse.data;
           this.parent.progressing = false;
         });
