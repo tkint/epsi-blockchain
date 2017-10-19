@@ -24,18 +24,15 @@ export default new Router({
       props: true,
     },
     {
-      path: '/Cours/:slug',
+      path: '/Cours',
       name: 'Cours',
       component: Cours,
-      // Children is just another route definition of sub-routes.
-      children: [
-        {
-          // Note: No leading slash. This can trip people up sometimes.
-          path: 'add',
-          component: addCourses,
-          props: true,
-        },
-      ],
+      props: true,
+    },
+    {
+      path: '/Cours/add',
+      name: 'Add Cours',
+      component: addCourses,
       props: true,
     },
     {
