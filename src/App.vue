@@ -67,7 +67,7 @@
           </v-card-title>
           <v-card-text>
             <v-container grid-list-md>
-              <form method="get" v-on:submit.prevent="connect">
+              <form method="get" v-on:submit.prevent="connect" v-if="bdd_user">
                 <v-layout wrap>
                   <v-flex xs12 sm6 md4>
                     <v-text-field label="Login" required v-model="bdd_user.login" autofocus></v-text-field>
@@ -555,8 +555,12 @@
         }
       },
       // EXAM
-      createExam() {
-        console.log('Exam created');
+      createExam(exam) {
+        this.processing = true;
+        this.axios.post(`${this.bdd_api}/exam`, exam, this.bdd_api_config).then((response) => {
+          console.log(response.data);
+          this.processing = false;
+        });
       },
       // DIPLOMA
       createDiplome() {
@@ -570,23 +574,6 @@
             this.bc_validate_diploma = responseBCValidate.data;
           });
         }
-      },
-      // SAMPLES
-      registerSample() {
-        this.bdd_user = {
-          login: 'dfbfbvxvdsvxdqfqdvdvd',
-          password: 'bhjkn,k,',
-          firstname: 'Test',
-          lastname: 'Numéro 8',
-        };
-        this.registerTeacher();
-      },
-      loginSample() {
-        this.bdd_user = {
-          login: 'Test',
-          password: 'test',
-        };
-        this.login();
       },
     },
   };

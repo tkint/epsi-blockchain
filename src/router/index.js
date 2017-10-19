@@ -45,15 +45,15 @@ export default new Router({
       props: true,
     },
     {
-      path: '/Cours/:id',
-      name: 'Cours',
-      component: Cours,
-      props: true,
-    },
-    {
       path: '/Cours/add',
       name: 'Add Cours',
       component: addCourses,
+      props: true,
+    },
+    {
+      path: '/Cours/:id',
+      name: 'Cours',
+      component: Cours,
       props: true,
     },
     {

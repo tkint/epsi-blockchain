@@ -99,7 +99,7 @@
         }
       },
       submit() {
-        this.parent.createExam();
+        this.parent.createExam(this.exam);
       },
       reset(index) {
         this.exam.questions[index].answers.forEach((answer) => {
