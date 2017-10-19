@@ -29,6 +29,7 @@ module.exports = {
       'js': 'never',
       'vue': 'never'
     }],
+    'no-param-reassign': ['error', { 'props': false }],
     "no-console":0,
     // allow optionalDependencies
     'import/no-extraneous-dependencies': ['error', {

@@ -70,11 +70,13 @@
     },
     methods: {
       getCourse() {
-        this.parent.progressing = true;
-        this.axios.get(`${this.parent.bdd_api}/course/${this.$route.params.id}`, this.parent.bdd_api_config).then((responseBDDCourse) => {
-          this.course = responseBDDCourse.data;
-          this.parent.progressing = false;
-        });
+        if (this.$route.params.id) {
+          this.parent.progressing = true;
+          this.axios.get(`${this.parent.bdd_api}/course/${this.$route.params.id}`, this.parent.bdd_api_config).then((responseBDDCourse) => {
+            this.course = responseBDDCourse.data;
+            this.parent.progressing = false;
+          });
+        }
       },
       openCourse(courseId) {
         this.$router.push({ name: 'Cours', params: { id: courseId } });

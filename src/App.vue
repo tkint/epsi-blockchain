@@ -242,13 +242,13 @@
       },
     },
     created() {
-      this.getUser();
+      this.autoConnect();
       this.getThemes();
       this.getCourses();
     },
     computed: {
       isLog() {
-        return this.bdd_user.id_user !== null;
+        return this.bdd_user.id_user !== null || this.$cookie.get('id_user');
       },
       isStudent() {
         return this.bdd_user.user_type === this.bdd_user_types[0];
@@ -256,17 +256,28 @@
     },
     methods: {
       // USER
-      getUser() {
-        if (this.$cookie.get('user')) {
-          this.bdd_user = this.$cookie.get('user');
+      autoConnect() {
+        if (this.$cookie.get('id_user')) {
+          this.getUser(this.$cookie.get('id_user'));
+          if (this.bdd_user.id_user !== null) {
+            this.getBCUser(this.getUserTypeIndexByUser(this.bdd_user));
+            this.$router.push('/Dashboard');
+          }
         }
+      },
+      getUser(id) {
+        this.processing = true;
+        this.axios.get(`${this.bdd_api}/user/${id}`, this.bdd_api_config).then((response) => {
+          this.bdd_user = response.data;
+          this.processing = false;
+        });
       },
       connect() {
         this.processing = true;
         this.axios.post(`${this.bdd_api}/user/login`, this.bdd_user, this.bdd_api_config).then((response) => {
           this.bdd_user = response.data;
           this.processing = false;
-          this.$cookie.set('user', this.bdd_user, 1);
+          this.$cookie.set('id_user', this.bdd_user.id_user, 1);
           if (this.isLog) {
             this.getBCUser(this.getUserTypeIndexByUser(this.bdd_user));
             this.dialogSignIn = false;
@@ -276,7 +287,7 @@
         this.getCoursesByStudent();
       },
       disconnect() {
-        this.$cookie.delete('user');
+        this.$cookie.delete('id_user');
         this.processing = true;
         this.drawer = false;
         setTimeout(() => {
