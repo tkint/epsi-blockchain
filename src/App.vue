@@ -207,6 +207,9 @@
         // FOLLOWED COURSE
         bc_followed_course: 'fr.epsi.blockchain.FollowedCourse',
         bc_followed_courses: [],
+        // DIPLOMA
+        bc_validate_diploma: null,
+        bc_validate_type: 'fr.epsi.blockchain.Validate',
       };
     },
     watch: {
@@ -470,6 +473,18 @@
       },
       deleteCourse() {
         this.axios.delete(`${this.bdd_api}/course/${this.bdd_course.id_course}`, this.bdd_api_config);
+      },
+      createDiplome(followedCourseID) {
+        if (this.bc_user.teacherID) {
+          this.bc_validate_diploma = {
+            $class: 'fr.epsi.blockchain.Validate',
+            teacher: this.bc_user.teacherID,
+            followedCourse: followedCourseID,
+          };
+          this.axios.post(`${this.bc_api}/validate`, this.bc_validate_diploma, this.bc_api_config).then((responseBCValidate) => {
+            this.bc_validate_diploma = responseBCValidate.data;
+          });
+        }
       },
       // SAMPLES
       registerSample() {
