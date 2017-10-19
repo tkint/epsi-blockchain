@@ -19,7 +19,7 @@
       <br>
       <h3>List of existing themes</h3>
       <v-list v-bind:item="parent.bdd_themes" item-text="title" >
-          <v-list-tile v-for="item in parent.bdd_themes">
+          <v-list-tile v-for="(item, index) in parent.bdd_themes" :key="index">
             <v-list-tile-content>
               <v-list-tile-title>{{ item.title }}</v-list-tile-title>
             </v-list-tile-content>
