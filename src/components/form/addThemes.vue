@@ -37,8 +37,6 @@
     },
     methods: {
       submit() {
-        console.log('test');
-        // const course = this.parent.bdd_course;
         this.parent.createTheme();
       },
       clear() {

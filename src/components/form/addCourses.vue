@@ -1,6 +1,5 @@
 <template>
   <div class="add-courses">
-    {{ parent.bdd_course }}
     <div v-if="parent.isLog">
       <h2>{{ msg }}</h2>
       <v-form v-model="valid" ref="form" lazy-validation>
@@ -13,6 +12,7 @@
           v-bind:items="parent.bdd_themes"
           v-model="parent.bdd_course.theme"
           item-text="title"
+          item-value="title"
           label="Themes"
           single-line
           bottom

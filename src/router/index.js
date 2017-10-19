@@ -39,7 +39,7 @@ export default new Router({
       props: true,
     },
     {
-      path: '/Cours',
+      path: '/Cours/:id',
       name: 'Cours',
       component: Cours,
       props: true,
@@ -63,7 +63,7 @@ export default new Router({
       props: true,
     },
     {
-      path: '/Theme/:theme',
+      path: '/Theme/:title',
       name: 'Theme',
       component: Theme,
       props: true,
