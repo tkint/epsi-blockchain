@@ -8,10 +8,18 @@
           <router-link to="/Dashboard" style="text-decoration: none;">Dashboard</router-link>
         </v-list-tile-content>
       </v-list-tile>
-
       <v-list-tile>
         <v-list-tile-action>
-          <i class="fa fa-file" aria-hidden="true"></i>
+          <v-icon>folder</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <router-link to="/Themes" style="text-decoration: none;">Themes</router-link>
+        </v-list-tile-content>
+      </v-list-tile>
+      <v-list-tile>
+        <v-list-tile-action>
+          <!--<i class="fa fa-file" aria-hidden="true"></i>-->
+          <v-icon>assignment</v-icon>
         </v-list-tile-action>
         <v-list-tile-content>
           <router-link to="/Cours" style="text-decoration: none;">Courses</router-link>
@@ -19,7 +27,8 @@
       </v-list-tile>
       <v-list-tile>
       <v-list-tile-action>
-        <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+        <!--<i class="fa fa-graduation-cap" aria-hidden="true"></i>-->
+        <v-icon>school</v-icon>
       </v-list-tile-action>
       <v-list-tile-content>
         <router-link to="/Diplome" style="text-decoration: none;">Diplomas</router-link>
