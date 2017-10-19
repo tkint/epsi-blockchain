@@ -242,6 +242,7 @@
       },
     },
     created() {
+      this.getUser();
       this.getThemes();
       this.getCourses();
     },
@@ -255,11 +256,17 @@
     },
     methods: {
       // USER
+      getUser() {
+        if (this.$cookie.get('user')) {
+          this.bdd_user = this.$cookie.get('user');
+        }
+      },
       connect() {
         this.processing = true;
         this.axios.post(`${this.bdd_api}/user/login`, this.bdd_user, this.bdd_api_config).then((response) => {
           this.bdd_user = response.data;
           this.processing = false;
+          this.$cookie.set('user', this.bdd_user, 1);
           if (this.isLog) {
             this.getBCUser(this.getUserTypeIndexByUser(this.bdd_user));
             this.dialogSignIn = false;
@@ -269,6 +276,7 @@
         this.getCoursesByStudent();
       },
       disconnect() {
+        this.$cookie.delete('user');
         this.processing = true;
         this.drawer = false;
         setTimeout(() => {
@@ -426,11 +434,11 @@
         });
       },
       getCoursesByStudent() {
-        this.processing = true;
         // Check if student
         if (this.bc_user &&
           this.bc_user.studentID &&
           this.bc_user.studentID === this.bdd_user.id_blockchain) {
+          this.processing = true;
           // Get every followedCourses from BC
           this.axios.get(`${this.bc_api}/${this.bc_followed_course_type}`, this.bc_api_config).then((responseBCFollowedCourse) => {
             // Filter followedCourses on studentID

@@ -12,12 +12,17 @@
           single-line
           bottom
         ></v-select>
-        <v-stepper v-model="e1">
+        <v-stepper v-model="stepper">
           <v-stepper-header>
-            <v-stepper-step v-for="(question, index) in exam.questions" :key="index" :step="index" :complete="e1 > index">Question {{ index + 1 }}</v-stepper-step>
-            <v-stepper-step :step="exam.questions.length">Validation</v-stepper-step>
+            <v-stepper-step
+              v-for="(question, index) in exam.questions"
+              :key="index"
+              :step="index + 1"
+              :complete="stepper > index">
+              Question {{ index + 1 }}
+            </v-stepper-step>
           </v-stepper-header>
-          <v-stepper-content v-for="(question, index) in exam.questions" :key="index" :step="index">
+          <v-stepper-content v-for="(question, index) in exam.questions" :key="index" :step="index + 1">
             <v-text-field
               label="Question"
               v-model="question.title"
@@ -30,13 +35,10 @@
               v-for="(answer, i) in question.answers"
               :key="i"
             ></v-text-field>
-            <v-btn color="orange" v-if="index > 0" @click.stop="e1 = index - 1">Precedent</v-btn>
-            <v-btn color="primary" v-if="index < exam.questions.length" @click.stop="e1 = index + 1">Continue</v-btn>
-            <v-btn light @click.stop="reset(index)">Reset</v-btn>
-          </v-stepper-content>
-          <v-stepper-content :step="exam.questions.length">
-            <v-btn color="orange" @click.stop="e1 = exam.questions.length - 1">Precedent</v-btn>
-            <v-btn @click.stop="submit" :disabled="!valid">Finish</v-btn>
+            <v-btn color="orange" dark v-if="index > 0" @click.stop="stepper = stepper - 1">Precedent</v-btn>
+            <v-btn color="primary" v-if="index < exam.questions.length - 1" @click.stop="stepper = stepper + 1">Continue</v-btn>
+            <v-btn color="primary" v-if="index === exam.questions.length - 1" @click.stop="submit" :disabled="!valid">Finish</v-btn>
+            <v-btn color="secondary" @click.stop="reset(index)">Reset</v-btn>
           </v-stepper-content>
         </v-stepper>
       </v-form>
@@ -57,7 +59,7 @@
     props: ['parent'],
     data() {
       return {
-        e1: 0,
+        stepper: 0,
         msg: 'Add QCM',
         valid: true,
         exam: {
